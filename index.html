@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AsiaEuro Training Center | Student Enrollment</title>
+  <style>
+    :root {
+      --primary: #023E8A;
+      --primary-2: #0077B6;
+      --accent: #D4AF37;
+      --bg: #F5F8FC;
+      --card: #FFFFFF;
+      --text: #10233F;
+      --muted: #627188;
+      --border: #DCE4EE;
+      --success: #138A72;
+      --danger: #B42318;
+      --shadow: 0 18px 45px rgba(2, 62, 138, .12);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(0,119,182,.12), transparent 30%),
+        linear-gradient(180deg, #EEF5FB 0%, var(--bg) 100%);
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 30px 16px 50px;
+    }
+
+    .shell {
+      width: min(980px, 100%);
+      margin: 0 auto;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      padding: 32px;
+      color: #fff;
+      background:
+        linear-gradient(120deg, rgba(2,62,138,.98), rgba(0,119,182,.92)),
+        #023E8A;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border: 26px solid rgba(255,255,255,.08);
+      border-radius: 50%;
+      right: -80px;
+      top: -100px;
+    }
+
+    .brand {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .brand-mark {
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #fff, #DDEEFF);
+      color: var(--primary);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 24px;
+      box-shadow: 0 10px 20px rgba(0,0,0,.12);
+    }
+
+    .brand h1 {
+      font-size: clamp(24px, 4vw, 38px);
+      margin: 0;
+      line-height: 1.05;
+    }
+
+    .brand p {
+      margin: 7px 0 0;
+      opacity: .88;
+    }
+
+    .hero-copy {
+      max-width: 720px;
+      font-size: 16px;
+      line-height: 1.65;
+      opacity: .96;
+    }
+
+    .info-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .pill {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      padding: 9px 13px;
+      font-size: 13px;
+    }
+
+    .progress-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(16,35,63,.07);
+      margin-bottom: 20px;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .progress-top strong { font-size: 14px; }
+    .progress-top span { color: var(--muted); font-size: 13px; }
+
+    .bar {
+      height: 10px;
+      border-radius: 999px;
+      background: #E7EDF5;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 16.67%;
+      background: linear-gradient(90deg, var(--accent), #F5D76E);
+      transition: width .25s ease;
+    }
+
+    form {
+      background: var(--card);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .step {
+      display: none;
+      padding: 30px;
+      animation: fade .2s ease;
+    }
+
+    .step.active { display: block; }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 18px;
+      margin-bottom: 24px;
+    }
+
+    .step-header .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: .11em;
+      font-weight: 800;
+      font-size: 12px;
+      color: var(--primary-2);
+      margin-bottom: 7px;
+    }
+
+    .step-header h2 {
+      margin: 0;
+      font-size: clamp(24px, 4vw, 32px);
+    }
+
+    .step-header p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .field { margin-bottom: 18px; }
+    .field.full { grid-column: 1 / -1; }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .required { color: var(--danger); }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid #CBD6E3;
+      border-radius: 12px;
+      padding: 13px 14px;
+      font: inherit;
+      color: var(--text);
+      background: #fff;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary-2);
+      box-shadow: 0 0 0 4px rgba(0,119,182,.11);
+    }
+
+    textarea { min-height: 110px; resize: vertical; }
+
+    .help {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 7px;
+      line-height: 1.45;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .choice {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 13px;
+      cursor: pointer;
+      background: #FCFDFE;
+    }
+
+    .choice input { width: auto; margin-top: 2px; }
+
+    .notice {
+      padding: 16px;
+      border-radius: 14px;
+      background: #F1F7FC;
+      border-left: 4px solid var(--primary-2);
+      color: #2E4664;
+      line-height: 1.55;
+      margin-bottom: 20px;
+    }
+
+    .agreement-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+
+    .agreement-box header {
+      padding: 15px 18px;
+      background: #F5F8FC;
+      border-bottom: 1px solid var(--border);
+      font-weight: 800;
+    }
+
+    .agreement-box .body {
+      padding: 18px;
+      max-height: 310px;
+      overflow-y: auto;
+      line-height: 1.55;
+      color: #334A66;
+    }
+
+    .agreement-box h3 {
+      color: var(--primary);
+      margin: 18px 0 6px;
+      font-size: 16px;
+    }
+
+    .agreement-box h3:first-child { margin-top: 0; }
+
+    .agreement-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      color: var(--primary-2);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .agreement-link:hover { text-decoration: underline; }
+
+    .signature-card {
+      padding: 18px;
+      border-radius: 16px;
+      background: #FBFCFE;
+      border: 1px solid var(--border);
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 20px 30px 30px;
+      background: #fff;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 13px 20px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn-secondary {
+      background: #EAF0F6;
+      color: var(--text);
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary), var(--primary-2));
+      color: #fff;
+      min-width: 130px;
+      box-shadow: 0 10px 20px rgba(2,62,138,.18);
+    }
+
+    .btn-primary:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .summary {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: #FBFCFE;
+    }
+
+    .summary-item span:first-child { color: var(--muted); }
+    .summary-item span:last-child { font-weight: 800; text-align: right; }
+
+    .success {
+      display: none;
+      background: #fff;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 38px;
+      text-align: center;
+    }
+
+    .success.show { display: block; }
+
+    .success-icon {
+      width: 78px;
+      height: 78px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      margin: 0 auto 18px;
+      background: #EAF8F3;
+      color: var(--success);
+      font-size: 38px;
+      font-weight: 900;
+    }
+
+    .success h2 { margin: 0 0 10px; }
+    .success p { color: var(--muted); line-height: 1.6; }
+
+    .whatsapp-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 14px;
+      padding: 14px 20px;
+      border-radius: 12px;
+      background: #25D366;
+      color: #fff;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 16px;
+    }
+
+    @media (max-width: 720px) {
+      .page { padding: 14px 10px 30px; }
+      .hero, .step, .actions { padding-left: 20px; padding-right: 20px; }
+      .grid, .choice-grid { grid-template-columns: 1fr; }
+      .actions { flex-direction: column-reverse; }
+      .actions button { width: 100%; }
+      .summary-item { flex-direction: column; gap: 5px; }
+      .summary-item span:last-child { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="shell">
+      <section class="hero">
+        <div class="brand">
+          <div class="brand-mark">AE</div>
+          <div>
+            <h1>AsiaEuro Training Center</h1>
+            <p>Official Student Enrollment Portal</p>
+          </div>
+        </div>
+
+        <div class="hero-copy">
+          Please complete all required information accurately. Prepare a copy of your QID,
+          passport, and proof of payment before beginning.
+        </div>
+
+        <div class="info-row">
+          <div class="pill">📞 +974 3347 2053</div>
+          <div class="pill">📍 1st Floor, Room 15, Concord Business Center, Doha</div>
+          <div class="pill">⏱ 5–10 minutes</div>
+        </div>
+      </section>
+
+      <section class="progress-card" aria-label="Form progress">
+        <div class="progress-top">
+          <strong id="progressTitle">Step 1 of 6</strong>
+          <span id="progressLabel">Personal Information</span>
+        </div>
+        <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+      </section>
+
+      <form id="enrollmentForm" novalidate>
+        <!-- STEP 1 -->
+        <section class="step active" data-step="1">
+          <div class="step-header">
+            <div class="eyebrow">Step 1</div>
+            <h2>Personal Information</h2>
+            <p>Enter your details exactly as shown on your official identification.</p>
+          </div>
+
+          <div class="grid">
+            <div class="field full">
+              <label for="fullName">Full Name Based on QID <span class="required">*</span></label>
+              <input id="fullName" name="fullName" type="text" required autocomplete="name" />
+            </div>
+
+            <div class="field">
+              <label for="course">Course <span class="required">*</span></label>
+              <select id="course" name="course" required>
+                <option value="">Select a course</option>
+                <option>Medical Coding</option>
+                <option>Nursing Assistant / Caregiver</option>
+                <option>Phlebotomy Technician</option>
+                <option>CSSD</option>
+                <option>Automotive Technology</option>
+                <option>Welding Technology</option>
+                <option>Barista</option>
+                <option>Baking</option>
+                <option>Culinary Arts</option>
+                <option>Human Resource Management</option>
+                <option>Business Management</option>
+                <option>Document Controller</option>
+                <option>MS Office (Basic & Advanced)</option>
+                <option>IELTS Review</option>
+                <option>English Proficiency</option>
+                <option>Early Childhood Education</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="email">Email Address <span class="required">*</span></label>
+              <input id="email" name="email" type="email" required autocomplete="email" />
+            </div>
+
+            <div class="field">
+              <label for="phone">Phone Number <span class="required">*</span></label>
+              <input id="phone" name="phone" type="tel" required placeholder="+974" autocomplete="tel" />
+            </div>
+
+            <div class="field">
+              <label for="birthDate">Date of Birth <span class="required">*</span></label>
+              <input id="birthDate" name="birthDate" type="date" required />
+            </div>
+
+            <div class="field">
+              <label for="nationality">Nationality <span class="required">*</span></label>
+              <input id="nationality" name="nationality" type="text" required />
+            </div>
+
+            <div class="field">
+              <label for="gender">Gender <span class="required">*</span></label>
+              <select id="gender" name="gender" required>
+                <option value="">Select an option</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Prefer not to say</option>
+              </select>
+            </div>
+
+            <div class="field full">
+              <label for="homeAddress">Home Address <span class="required">*</span></label>
+              <textarea id="homeAddress" name="homeAddress" required></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 2 -->
+        <section class="step" data-step="2">
+          <div class="step-header">
+            <div class="eyebrow">Step 2</div>
+            <h2>Educational Background</h2>
+            <p>Tell us about your highest completed level of education.</p>
+          </div>
+
+          <div class="grid">
+            <div class="field">
+              <label for="education">Highest Educational Attainment <span class="required">*</span></label>
+              <select id="education" name="education" required>
+                <option value="">Select one</option>
+                <option>High School</option>
+                <option>Senior High School</option>
+                <option>Vocational / Technical</option>
+                <option>College Undergraduate</option>
+                <option>College Graduate</option>
+                <option>Master's Degree</option>
+                <option>Doctorate</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="yearCompleted">Year Completed / Last Attended <span class="required">*</span></label>
+              <input id="yearCompleted" name="yearCompleted" type="number" min="1950" max="2100" required />
+            </div>
+
+            <div class="field">
+              <label for="employmentStatus">Employment Status</label>
+              <select id="employmentStatus" name="employmentStatus">
+                <option value="">Select one</option>
+                <option>Employed</option>
+                <option>Unemployed</option>
+                <option>Student</option>
+                <option>Self-employed</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="referralSource">How did you hear about us?</label>
+              <select id="referralSource" name="referralSource">
+                <option value="">Select one</option>
+                <option>Facebook</option>
+                <option>Instagram</option>
+                <option>TikTok</option>
+                <option>Google</option>
+                <option>Friend / Referral</option>
+                <option>Walk-in</option>
+                <option>Flyer</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="field full">
+              <label>Preferred Class Schedule</label>
+              <div class="choice-grid">
+                <label class="choice"><input type="radio" name="preferredSchedule" value="Morning" /> Morning</label>
+                <label class="choice"><input type="radio" name="preferredSchedule" value="Afternoon" /> Afternoon</label>
+                <label class="choice"><input type="radio" name="preferredSchedule" value="Evening" /> Evening</label>
+                <label class="choice"><input type="radio" name="preferredSchedule" value="Weekend" /> Weekend</label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 3 -->
+        <section class="step" data-step="3">
+          <div class="step-header">
+            <div class="eyebrow">Step 3</div>
+            <h2>Emergency Contact</h2>
+            <p>Provide the details of a person we may contact in case of emergency.</p>
+          </div>
+
+          <div class="grid">
+            <div class="field">
+              <label for="emergencyName">Emergency Contact Name <span class="required">*</span></label>
+              <input id="emergencyName" name="emergencyName" type="text" required />
+            </div>
+
+            <div class="field">
+              <label for="relationship">Relationship to Student <span class="required">*</span></label>
+              <select id="relationship" name="relationship" required>
+                <option value="">Select one</option>
+                <option>Mother</option>
+                <option>Father</option>
+                <option>Spouse</option>
+                <option>Brother</option>
+                <option>Sister</option>
+                <option>Relative</option>
+                <option>Friend</option>
+                <option>Guardian</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="emergencyPhone">Emergency Phone Number <span class="required">*</span></label>
+              <input id="emergencyPhone" name="emergencyPhone" type="tel" required />
+            </div>
+
+            <div class="field">
+              <label for="emergencyAddress">Emergency Contact Address</label>
+              <input id="emergencyAddress" name="emergencyAddress" type="text" />
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 4 -->
+        <section class="step" data-step="4">
+          <div class="step-header">
+            <div class="eyebrow">Step 4</div>
+            <h2>Identification Documents</h2>
+            <p>Upload clear and readable copies. Files are sent securely to the connected Google Drive folder.</p>
+          </div>
+
+          <div class="notice">
+            Upload JPG, PNG, or PDF files only. Each file should be no larger than 10 MB.
+          </div>
+
+          <div class="grid">
+            <div class="field">
+              <label for="qidFile">QID Copy (Front and Back) <span class="required">*</span></label>
+              <input id="qidFile" name="qidFile" type="file" accept=".jpg,.jpeg,.png,.pdf" required />
+            </div>
+
+            <div class="field">
+              <label for="passportFile">Passport Copy</label>
+              <input id="passportFile" name="passportFile" type="file" accept=".jpg,.jpeg,.png,.pdf" />
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 5 -->
+        <section class="step" data-step="5">
+          <div class="step-header">
+            <div class="eyebrow">Step 5</div>
+            <h2>Student Enrollment Agreement</h2>
+            <p>Please read the agreement carefully before continuing.</p>
+          </div>
+
+          <div class="agreement-box">
+            <header>AETC Student Enrollment Agreement — Summary</header>
+            <div class="body">
+              <h3>1. Payment Policy</h3>
+              <p>All payments are non-refundable except where expressly stated in the agreement or required by applicable law. Students must complete payments according to the approved payment schedule.</p>
+
+              <h3>2. Refund for Delayed Course Opening</h3>
+              <p>A full refund may be granted when the course opening is delayed by more than ninety days from the confirmed registration date.</p>
+
+              <h3>3. Attendance and Absence</h3>
+              <p>Students absent for more than four sessions without prior notice may be dropped from the course without refund.</p>
+
+              <h3>4. Uniform, ID, Conduct and Social Media</h3>
+              <p>Students must follow uniform, identification, conduct, and responsible social media policies.</p>
+
+              <h3>5. Property and Equipment</h3>
+              <p>Students are responsible for authorized use and proper care of AETC property and equipment.</p>
+
+              <h3>6. Medical Declaration and Housekeeping</h3>
+              <p>Students must disclose relevant medical conditions and maintain clean and orderly shared spaces.</p>
+
+              <a class="agreement-link" id="agreementPdfLink" href="#" target="_blank" rel="noopener">
+                📄 Open the complete Student Enrollment Agreement PDF
+              </a>
+            </div>
+          </div>
+
+          <div class="signature-card">
+            <label class="choice">
+              <input id="agreementAccepted" name="agreementAccepted" type="checkbox" required />
+              <span>I have carefully read, understood, and agree to comply with the Student Enrollment Agreement of AsiaEuro Training Center.</span>
+            </label>
+
+            <div class="field" style="margin-top:18px;margin-bottom:0;">
+              <label for="signatureName">Electronic Signature — Full Legal Name <span class="required">*</span></label>
+              <input id="signatureName" name="signatureName" type="text" required />
+              <div class="help">Typing your full legal name serves as your electronic acknowledgment of the agreement.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 6 -->
+        <section class="step" data-step="6">
+          <div class="step-header">
+            <div class="eyebrow">Step 6</div>
+            <h2>Review and Payment Confirmation</h2>
+            <p>Review your enrollment details before submitting.</p>
+          </div>
+
+          <div id="reviewSummary" class="summary"></div>
+
+          <div class="notice">
+            After submitting, WhatsApp will open with your name and selected course already typed.
+            Attach your proof of payment before sending the message.
+          </div>
+
+          <label class="choice">
+            <input id="paymentAcknowledged" name="paymentAcknowledged" type="checkbox" required />
+            <span>I understand that my enrollment will only be confirmed after my proof of payment has been verified.</span>
+          </label>
+        </section>
+
+        <div class="actions">
+          <button type="button" id="backBtn" class="btn-secondary" style="visibility:hidden;">Back</button>
+          <button type="button" id="nextBtn" class="btn-primary">Continue</button>
+          <button type="submit" id="submitBtn" class="btn-primary" style="display:none;">Submit Enrollment</button>
+        </div>
+      </form>
+
+      <section id="successScreen" class="success">
+        <div class="success-icon">✓</div>
+        <h2>Enrollment Submitted</h2>
+        <p>
+          Thank you for choosing AsiaEuro Training Center. Your information has been recorded.
+          Please send your proof of payment through WhatsApp to complete your enrollment.
+        </p>
+        <a id="whatsappButton" class="whatsapp-btn" href="#" target="_blank" rel="noopener">
+          Open WhatsApp and Send Receipt
+        </a>
+      </section>
+
+      <div class="footer-note">
+        AsiaEuro Training Center • Doha, Qatar
+      </div>
+    </div>
+  </main>
+
+  <script>
+    /*
+      IMPORTANT:
+      1. Replace APPS_SCRIPT_WEB_APP_URL with your deployed Apps Script URL.
+      2. Replace AGREEMENT_PDF_URL with your Google Drive PDF link.
+      3. WhatsApp number must contain digits only.
+    */
+    const CONFIG = {
+      APPS_SCRIPT_WEB_APP_URL: "https://script.google.com/macros/s/AKfycbxWIoEz_RHpuNYFsG8VVpH6YpmfJzz9_pRZxhFIcwy6jL6uC00KR5AknfSLV0J2MN5IDQ/exec",
+      AGREEMENT_PDF_URL: "https://drive.google.com/file/d/1iEuY_VgnN4uhIlGGXskb1ZI71pGeQaMR/view?usp=sharing",
+      WHATSAPP_NUMBER: "97433472053"
+    };
+
+    document.getElementById("agreementPdfLink").href = CONFIG.AGREEMENT_PDF_URL;
+
+    const form = document.getElementById("enrollmentForm");
+    const steps = [...document.querySelectorAll(".step")];
+    const nextBtn = document.getElementById("nextBtn");
+    const backBtn = document.getElementById("backBtn");
+    const submitBtn = document.getElementById("submitBtn");
+    const barFill = document.getElementById("barFill");
+    const progressTitle = document.getElementById("progressTitle");
+    const progressLabel = document.getElementById("progressLabel");
+    const successScreen = document.getElementById("successScreen");
+    const whatsappButton = document.getElementById("whatsappButton");
+
+    const labels = [
+      "Personal Information",
+      "Educational Background",
+      "Emergency Contact",
+      "Identification Documents",
+      "Enrollment Agreement",
+      "Review and Payment"
+    ];
+
+    let currentStep = 0;
+
+    function updateStep() {
+      steps.forEach((step, index) => step.classList.toggle("active", index === currentStep));
+      progressTitle.textContent = `Step ${currentStep + 1} of ${steps.length}`;
+      progressLabel.textContent = labels[currentStep];
+      barFill.style.width = `${((currentStep + 1) / steps.length) * 100}%`;
+
+      backBtn.style.visibility = currentStep === 0 ? "hidden" : "visible";
+      nextBtn.style.display = currentStep === steps.length - 1 ? "none" : "inline-block";
+      submitBtn.style.display = currentStep === steps.length - 1 ? "inline-block" : "none";
+
+      if (currentStep === steps.length - 1) buildReview();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function validateCurrentStep() {
+      const fields = [...steps[currentStep].querySelectorAll("input, select, textarea")];
+      for (const field of fields) {
+        if (!field.checkValidity()) {
+          field.reportValidity();
+          return false;
+        }
+      }
+      return true;
+    }
+
+    nextBtn.addEventListener("click", () => {
+      if (!validateCurrentStep()) return;
+      currentStep += 1;
+      updateStep();
+    });
+
+    backBtn.addEventListener("click", () => {
+      currentStep -= 1;
+      updateStep();
+    });
+
+    function textValue(name) {
+      const el = form.elements[name];
+      return el ? String(el.value || "").trim() : "";
+    }
+
+    function buildReview() {
+      const data = [
+        ["Full Name", textValue("fullName")],
+        ["Course", textValue("course")],
+        ["Email", textValue("email")],
+        ["Phone", textValue("phone")],
+        ["Nationality", textValue("nationality")],
+        ["Education", textValue("education")],
+        ["Emergency Contact", textValue("emergencyName")],
+        ["Electronic Signature", textValue("signatureName")]
+      ];
+
+      document.getElementById("reviewSummary").innerHTML = data.map(([label, value]) =>
+        `<div class="summary-item"><span>${escapeHtml(label)}</span><span>${escapeHtml(value)}</span></div>`
+      ).join("");
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    async function fileToBase64(file) {
+      if (!file) return null;
+      if (file.size > 10 * 1024 * 1024) {
+        throw new Error(`${file.name} is larger than 10 MB.`);
+      }
+
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64 = String(reader.result).split(",")[1];
+          resolve({
+            name: file.name,
+            type: file.type,
+            base64
+          });
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!validateCurrentStep()) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting...";
+
+      try {
+        const qidFile = await fileToBase64(document.getElementById("qidFile").files[0]);
+        const passportFile = await fileToBase64(document.getElementById("passportFile").files[0]);
+
+        const payload = {
+          fullName: textValue("fullName"),
+          course: textValue("course"),
+          email: textValue("email"),
+          phone: textValue("phone"),
+          birthDate: textValue("birthDate"),
+          nationality: textValue("nationality"),
+          gender: textValue("gender"),
+          homeAddress: textValue("homeAddress"),
+          education: textValue("education"),
+          yearCompleted: textValue("yearCompleted"),
+          employmentStatus: textValue("employmentStatus"),
+          referralSource: textValue("referralSource"),
+          preferredSchedule: textValue("preferredSchedule"),
+          emergencyName: textValue("emergencyName"),
+          relationship: textValue("relationship"),
+          emergencyPhone: textValue("emergencyPhone"),
+          emergencyAddress: textValue("emergencyAddress"),
+          signatureName: textValue("signatureName"),
+          agreementAccepted: document.getElementById("agreementAccepted").checked,
+          paymentAcknowledged: document.getElementById("paymentAcknowledged").checked,
+          qidFile,
+          passportFile
+        };
+
+        if (!CONFIG.APPS_SCRIPT_WEB_APP_URL.startsWith("https://script.google.com/")) {
+          throw new Error("Please add your deployed Apps Script Web App URL in CONFIG.");
+        }
+
+        const response = await fetch(CONFIG.APPS_SCRIPT_WEB_APP_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        if (!result.ok) throw new Error(result.error || "Submission failed.");
+
+        const whatsappMessage =
+`Hello AsiaEuro Training Center!
+
+I have submitted my enrollment form.
+
+Full Name: ${payload.fullName}
+Course Enrolled: ${payload.course}
+Phone Number: ${payload.phone}
+
+Attached is my proof of payment.
+
+Thank you!`;
+
+        const whatsappUrl =
+          `https://wa.me/${CONFIG.WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
+
+        form.style.display = "none";
+        document.querySelector(".progress-card").style.display = "none";
+        successScreen.classList.add("show");
+        whatsappButton.href = whatsappUrl;
+
+        setTimeout(() => {
+          window.open(whatsappUrl, "_blank");
+        }, 700);
+
+      } catch (error) {
+        alert(error.message || "Something went wrong. Please try again.");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit Enrollment";
+      }
+    });
+
+    updateStep();
+  </script>
+</body>
+</html>
