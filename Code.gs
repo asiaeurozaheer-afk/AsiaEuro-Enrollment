@@ -1,7 +1,7 @@
   const CONFIG = {
-    SPREADSHEET_ID: "1Mdie27xg-ss2q0mqySVo0ObvMnrnCeQ3IKAvsX6AiMM/",
+    SPREADSHEET_ID: "1Mdie27xg-ss2q0mqySVo0ObvMnrnCeQ3IKAvsX6AiMM",
     SHEET_NAME: "AsiaEuro Enrollment Spreadsheet",
-    UPLOAD_FOLDER_ID: "https://drive.google.com/drive/folders/1yYYtNSVqXjq9i8J3QKRbXmySllBSrTJW?usp=sharing"
+    UPLOAD_FOLDER_ID: "1yYYtNSVqXjq9i8J3QKRbXmySllBSrTJW"
   };
 
   function doGet() {
